@@ -6,6 +6,12 @@ import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 import Spotify from '../../util/Spotify';
 
+function prepend(value, array) {
+  var newArray = array.slice();
+  newArray.unshift(value);
+  return newArray;
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -26,15 +32,21 @@ class App extends React.Component {
   addTrack(track) {
     let tracks = this.state.playlistTracks;
     tracks.push(track);
-
     this.setState({playlistTracks: tracks});
+
+    let search = this.state.searchResults;
+    search = search.filter(currentTrack => currentTrack.id !== track.id);
+    this.setState({searchResults: search});
   }
 
   removeTrack(track) {
     let tracks = this.state.playlistTracks;
     tracks = tracks.filter(currentTrack => currentTrack.id !== track.id);
-
     this.setState({playlistTracks: tracks});
+
+    let search = this.state.searchResults;
+    search = prepend(track, search);
+    this.setState({searchResults: search});
   }
 
   updatePlaylistName(name) {
